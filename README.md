@@ -21,7 +21,7 @@ insert new SampleJobAsync().prepareAsyncRequests(accounts.keySet());
 
 ## How to add new Async Job types / Handlers
 
-Follow the below steps, and use `SampleJobAsync` implementation as a reference:
+Follow the below steps and use `SampleJobAsync` implementation as a helpful reference:
 
 1. Create a new class that extends the `BaseAsyncHandler`
 2. Implement `getRequestType()` method (NOTE: it should return a string that is unique accross all handlers)
