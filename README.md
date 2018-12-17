@@ -2,6 +2,11 @@
 
 My implementation of Dan Appleman's Asynchronous Apex framework. Here's the [link](https://www.salesforce.com/video/192729/) to the original presentation.
 
+<a href="https://githubsfdeploy.herokuapp.com">
+  <img alt="Deploy to Salesforce"
+       src="https://raw.githubusercontent.com/afawcett/githubsfdeploy/master/deploy.png">
+</a>
+
 ## How to test the sample job:
 
 Assing the **Manage Async Requests** permission set to your user and execute the following snippet: 
