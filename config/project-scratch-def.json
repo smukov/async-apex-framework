@@ -1,0 +1,7 @@
+{
+    "orgName": "Async Request Demo",
+    "edition": "Developer",
+    "orgPreferences" : {
+        "enabled": ["S1DesktopEnabled"]
+    }
+}
