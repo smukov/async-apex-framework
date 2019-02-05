@@ -9,7 +9,7 @@ My implementation of Dan Appleman's Asynchronous Apex framework. Here's the [lin
 
 ## How to test the sample job:
 
-Assing the **Manage Async Requests** permission set to your user and execute the following snippet: 
+Assing the **Manage Async Requests** Permission Sett to your user and execute the following snippet: 
 
 ```
 // NOTE: this will update all your Accounts' Description field to "Updated: {execution time}"
@@ -17,7 +17,7 @@ Map<Id, Account> accounts = new Map<Id, Account>([SELECT Id FROM Account]);
 insert new SampleJobAsync().prepareAsyncRequests(accounts.keySet());
 ```
 
-> NOTE: Due to the fact that Anonymous Apex enforces FLS, you need to have **Manage Async Requests** permission set assigned before executing the snippet above. You **don't** have to assign this permission set to other users in order to use this framework.
+> NOTE: Due to the fact that Anonymous Apex enforces FLS, you need to have **Manage Async Requests** Permission Set assigned before executing the snippet above. You **don't** have to assign it to other users in order to use this framework.
 
 ## How to add new Async Job types / Handlers
 
