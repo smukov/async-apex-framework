@@ -36,7 +36,7 @@ insert new YOUR_NEW_ASYNC_JOB_CLASS().prepareAsyncRequests(SOME_SET_OF_IDS);
 
 ## Monitoring Async Requests
 
-All pending and failed requests can be seen in **Async Requests** tab. In order to see this tab in Salesforce, users have to be added to **Manage Async Requests** permission set.
+All pending and failed requests can be seen in **Async Requests** tab. In order to see this tab in Salesforce users have to be added to **Manage Async Requests** Permission Set.
 
 ## Requeue failed requests
 
