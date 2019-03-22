@@ -1,7 +1,7 @@
 public abstract class BaseAsyncHandler implements AsyncRequestQueueable.IAsyncRequestHandler {
-	
+    
     // Cannot put more IDs in a Long Text Area
-	public static final Integer MAX_NUMBER_OF_SINGLE_ID = 8190;
+    public static final Integer MAX_NUMBER_OF_SINGLE_ID = 8190;
     public static final String PARAMETERS_SPLITTER = ';';
 
     /**
@@ -15,9 +15,9 @@ public abstract class BaseAsyncHandler implements AsyncRequestQueueable.IAsyncRe
     *
     * @return                  List of Async_Request__c records ready to be inserted and enqueued 
     */
-	public List<Async_Request__c> prepareAsyncRequests(Set<Id> recordsToProcess){
-		return prepareAsyncRequests(recordsToProcess, MAX_NUMBER_OF_SINGLE_ID);
-	} 
+    public List<Async_Request__c> prepareAsyncRequests(Set<Id> recordsToProcess){
+        return prepareAsyncRequests(recordsToProcess, MAX_NUMBER_OF_SINGLE_ID);
+    } 
 
     /**
     * Prepares the Async_Request__c records by splitting the list of Ids into 
@@ -28,10 +28,10 @@ public abstract class BaseAsyncHandler implements AsyncRequestQueueable.IAsyncRe
     *
     * @return                  List of Async_Request__c records ready to be inserted and enqueued 
     */
-	public List<Async_Request__c> prepareAsyncRequests(Set<Id> recordsToProcess, Integer batchSize){
-		if(batchSize > MAX_NUMBER_OF_SINGLE_ID) throw new AsyncRequestQueueable.AsyncRequestException('Batch size cannot be larger than ' + MAX_NUMBER_OF_SINGLE_ID + ' Ids');
+    public List<Async_Request__c> prepareAsyncRequests(Set<Id> recordsToProcess, Integer batchSize){
+        if(batchSize > MAX_NUMBER_OF_SINGLE_ID) throw new AsyncRequestQueueable.AsyncRequestException('Batch size cannot be larger than ' + MAX_NUMBER_OF_SINGLE_ID + ' Ids');
         return createAsyncRequests(convertToAsyncRequestParams(recordsToProcess), batchSize);
-	}
+    }
 
     /**
     * Splits the provided asyncRequestParams into batches, and returns a list of Async_Request__c records
@@ -44,31 +44,31 @@ public abstract class BaseAsyncHandler implements AsyncRequestQueueable.IAsyncRe
     private List<Async_Request__c> createAsyncRequests(Set<String> asyncRequestParams, Integer batchSize)
     {
         List<Async_Request__c> asyncRequests = new List<Async_Request__c>();
-		Integer count = 0;
-		String params = '';
+        Integer count = 0;
+        String params = '';
 
-		for(String arParam : asyncRequestParams){
-			count++;
-			params += arParam + PARAMETERS_SPLITTER;
-			if(count >= batchSize)
-			{
-				asyncRequests.add(new Async_Request__c(
-					Type__c = getRequestType(), 
-					Params__c = params));
+        for(String arParam : asyncRequestParams){
+            count++;
+            params += arParam + PARAMETERS_SPLITTER;
+            if(count >= batchSize)
+            {
+                asyncRequests.add(new Async_Request__c(
+                    Type__c = getRequestType(), 
+                    Params__c = params));
 
-				count = 0;
-				params = '';
-			}
-		}
+                count = 0;
+                params = '';
+            }
+        }
 
-		// the last batch
-		if(String.isNotBlank(params)){
-			asyncRequests.add(new Async_Request__c(
-				Type__c = getRequestType(), 
-				Params__c = params));
-		}
-		
-		return asyncRequests;
+        // the last batch
+        if(String.isNotBlank(params)){
+            asyncRequests.add(new Async_Request__c(
+                Type__c = getRequestType(), 
+                Params__c = params));
+        }
+        
+        return asyncRequests;
     }
 
     /**
@@ -91,6 +91,6 @@ public abstract class BaseAsyncHandler implements AsyncRequestQueueable.IAsyncRe
         return retVal;
     }
 
-	public abstract String getRequestType();
-	public abstract void execute(Async_Request__c ar);
+    public abstract String getRequestType();
+    public abstract void execute(Async_Request__c ar);
 }

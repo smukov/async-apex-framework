@@ -12,46 +12,46 @@ public without sharing class AsyncRequestQueueable implements Queueable {
         new SampleJobAsync().getRequestType() => SampleJobAsync.class
     };
 
-	public static void startJob(){
-		try{
-			// this will prevent making 2 queuable jobs from 1 queueable
-			if(Limits.getQueueableJobs() == 0) { System.enqueueJob(new AsyncRequestQueueable()); }
-		}catch(Exception ex){
-			System.debug(ex.getMessage());
-			startJobFuture();
-		}
-	}
+    public static void startJob(){
+        try{
+            // this will prevent making 2 queuable jobs from 1 queueable
+            if(Limits.getQueueableJobs() == 0) { System.enqueueJob(new AsyncRequestQueueable()); }
+        }catch(Exception ex){
+            System.debug(ex.getMessage());
+            startJobFuture();
+        }
+    }
 
-	@future static void startJobFuture(){
-		System.enqueueJob(new AsyncRequestQueueable());
-	}
+    @future static void startJobFuture(){
+        System.enqueueJob(new AsyncRequestQueueable());
+    }
 
-	public void execute(QueueableContext context){
+    public void execute(QueueableContext context){
 
-		// Change this Custom Metadata setting to FALSE in case something goes haywire
-		if(!Configuration.getAsyncRequestConfig().Is_Async_Request_Processing_Enabled__c) return;
-		
-		List<Async_Request__c> requests = new List<Async_Request__c>();
-		try{
-			requests = [
-				SELECT Id, Type__c, Error_Msg__c, Params__c
-				FROM Async_Request__c
-				WHERE Error_Msg__c = null 
+        // Change this Custom Metadata setting to FALSE in case something goes haywire
+        if(!Configuration.getAsyncRequestConfig().Is_Async_Request_Processing_Enabled__c) return;
+        
+        List<Async_Request__c> requests = new List<Async_Request__c>();
+        try{
+            requests = [
+                SELECT Id, Type__c, Error_Msg__c, Params__c
+                FROM Async_Request__c
+                WHERE Error_Msg__c = null 
                 LIMIT 1 FOR UPDATE
-			];
-		}catch(System.QueryException ex){
-			// It can happen sometimes that a 2nd queueable is started and 
-			// it tries to process the same Async_Request__c record.
+            ];
+        }catch(System.QueryException ex){
+            // It can happen sometimes that a 2nd queueable is started and 
+            // it tries to process the same Async_Request__c record.
             // In that case just exit, and the other queueable that has the lock
             // will finish its work and enqueue the next pending request.
             return;
-		}
+        }
 
-		if(requests.size() == 0) return; // nothing to do, all requests processed
+        if(requests.size() == 0) return; // nothing to do, all requests processed
 
-		Async_Request__c request = requests[0];
+        Async_Request__c request = requests[0];
 
-		if(detectFailedRequests(context))
+        if(detectFailedRequests(context))
         {
             // the queueable seems to be failing, and the error is not being catched, so it's probably a governor limit issue
             request.Error_Msg__c = 'Failing due to Governor Limits. Check Apex Jobs in Setup for further details.';
@@ -80,12 +80,12 @@ public without sharing class AsyncRequestQueueable implements Queueable {
             }
         }
 
-		
+        
 
         // check if there is more pending requests, and if there is, start the next job
-		requests = [SELECT Id FROM Async_Request__c WHERE Error_Msg__c = null limit 1];
-		if(requests.size() > 0) startJob();
-	} 
+        requests = [SELECT Id FROM Async_Request__c WHERE Error_Msg__c = null limit 1];
+        if(requests.size() > 0) startJob();
+    } 
 
     /**
      * Detect requests that failed more than once in a row.TerritoryMgmt
@@ -94,24 +94,24 @@ public without sharing class AsyncRequestQueueable implements Queueable {
      * @param  context Current execution context
      * @return         TRUE - multiple failed requests detected
      */
-	private Boolean detectFailedRequests(QueueableContext context){
+    private Boolean detectFailedRequests(QueueableContext context){
 
-		List<AsyncApexJob> jobs = [
-			SELECT Id, Status, ExtendedStatus, CreatedDate, CompletedDate
-			FROM AsyncApexJob
-			WHERE JobType = 'Queueable' AND ApexClass.Name = 'AsyncRequestQueueable'
-			AND Id != :context.getJobId() ORDER BY CreatedDate DESC LIMIT 2
-		];
+        List<AsyncApexJob> jobs = [
+            SELECT Id, Status, ExtendedStatus, CreatedDate, CompletedDate
+            FROM AsyncApexJob
+            WHERE JobType = 'Queueable' AND ApexClass.Name = 'AsyncRequestQueueable'
+            AND Id != :context.getJobId() ORDER BY CreatedDate DESC LIMIT 2
+        ];
 
-		if(jobs.size() < 2) return false;
-		for(AsyncApexJob job : jobs){
-			if(job.Status != 'Failed') return false;
-		}
-		return true;
-	}
+        if(jobs.size() < 2) return false;
+        for(AsyncApexJob job : jobs){
+            if(job.Status != 'Failed') return false;
+        }
+        return true;
+    }
 
-	public interface IAsyncRequestHandler {
-	
+    public interface IAsyncRequestHandler {
+    
         /**
         * Prepares the Async_Request__c records by splitting the list of Ids into largest possible batch sizes. 
         *
@@ -123,31 +123,31 @@ public without sharing class AsyncRequestQueueable implements Queueable {
         *
         * @return                  List of Async_Request__c records ready to be inserted and enqueued 
         */
-		List<Async_Request__c> prepareAsyncRequests(Set<Id> recordsToProcess);
+        List<Async_Request__c> prepareAsyncRequests(Set<Id> recordsToProcess);
 
         /**
         * Prepares the Async_Request__c records by splitting the list of Ids into 
-		* batches of provided size
+        * batches of provided size
         *
         * @param  recordsToProcess set of IDs to be processed by Async Request
         * @param  batchSize        how many ID's to process at once
         *
         * @return                  List of Async_Request__c records ready to be inserted and enqueued 
         */
-		List<Async_Request__c> prepareAsyncRequests(Set<Id> recordsToProcess, Integer batchSize);
+        List<Async_Request__c> prepareAsyncRequests(Set<Id> recordsToProcess, Integer batchSize);
  
 
         /**
         * Unique name of this Async Request
         */
-		String getRequestType();
+        String getRequestType();
 
-		
+        
         /**
         * Logic to be executed
         */
-		void execute(Async_Request__c ar);
-	}
+        void execute(Async_Request__c ar);
+    }
 
-	public class AsyncRequestException extends Exception { }
+    public class AsyncRequestException extends Exception { }
 }
