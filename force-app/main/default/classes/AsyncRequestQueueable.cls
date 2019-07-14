@@ -34,12 +34,23 @@ public without sharing class AsyncRequestQueueable implements Queueable {
         
         List<Async_Request__c> requests = new List<Async_Request__c>();
         try{
-            requests = [
-                SELECT Id, Type__c, Error_Msg__c, Params__c, Options__c
+            // making sure to process Requests in the order that they were submitted
+            List<Async_Request__c> next = [
+                SELECT Id
                 FROM Async_Request__c
                 WHERE Error_Msg__c = null 
-                LIMIT 1 FOR UPDATE
+                ORDER BY Id ASC
+                LIMIT 1
             ];
+
+            if(next.isEmpty() == false){
+                requests = [
+                    SELECT Id, Type__c, Error_Msg__c, Params__c, Options__c, CreatedById
+                    FROM Async_Request__c
+                    WHERE Id = :next[0].Id 
+                    FOR UPDATE
+                ]; 
+            }
         }catch(System.QueryException ex){
             // It can happen sometimes that a 2nd queueable is started and 
             // it tries to process the same Async_Request__c record.
