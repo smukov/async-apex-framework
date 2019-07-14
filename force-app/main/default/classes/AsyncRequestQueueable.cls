@@ -9,7 +9,8 @@ public without sharing class AsyncRequestQueueable implements Queueable {
      * NOTE: Each handler must implement IAsyncRequestHandler interface.
      */
     private static Map<String, Type> requestHandlers = new Map<String, Type>{
-        new SampleJobAsync().getRequestType() => SampleJobAsync.class
+        new SampleJobAsync().getRequestType() => SampleJobAsync.class,
+        new SampleOptionsJobAsync().getRequestType() => SampleOptionsJobAsync.class
     };
 
     public static void startJob(){
