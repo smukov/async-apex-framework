@@ -19,6 +19,10 @@
                 <behavior>Edit</behavior>
                 <field>Params__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Options__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>

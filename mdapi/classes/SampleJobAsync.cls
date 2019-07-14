@@ -10,7 +10,7 @@ public without sharing class SampleJobAsync extends BaseAsyncHandler {
     
     public override void execute(Async_Request__c ar)
     {
-        List<String> accountIds = ar.Params__c.split(PARAMETERS_SPLITTER);
+        List<Id> accountIds = ar.Params__c.split(PARAMETERS_SPLITTER);
 
         if(accountIds.size() == 0) return;
 

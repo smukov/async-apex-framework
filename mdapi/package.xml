@@ -7,6 +7,8 @@
     <members>Configuration</members>
     <members>SampleJobAsync</members>
     <members>SampleJobAsync_Test</members>
+    <members>SampleOptionsJobAsync</members>
+    <members>SampleOptionsJobAsync_Test</members>
   </types>
   <types>
     <name>CustomMetadata</name>
@@ -26,6 +28,7 @@
     <name>CustomField</name>
     <members>Async_Request_Settings__mdt.Is_Async_Request_Processing_Enabled__c</members>
     <members>Async_Request__c.Error_Msg__c</members>
+    <members>Async_Request__c.Options__c</members>
     <members>Async_Request__c.Params__c</members>
     <members>Async_Request__c.Type__c</members>
   </types>

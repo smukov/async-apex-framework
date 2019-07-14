@@ -1,5 +1,7 @@
 @isTest
-private class SampleJobAsync_Test {
+private class SampleOptionsJobAsync_Test {
+
+    private static final String NEW_DESCRIPTION = 'New Description';
     
     @isTest static void should_update_all_accounts(){
         // Arrange
@@ -13,8 +15,12 @@ private class SampleJobAsync_Test {
         // Act
 
         Test.startTest();
+        
         Set<Id> accIds = new Map<Id, Account>(newAccounts).keySet();
-        insert new SampleJobAsync().prepareAsyncRequests(accIds);
+        insert new SampleOptionsJobAsync().prepareAsyncRequests(
+            JSON.serialize(new SampleOptionsJobAsync.Options(NEW_DESCRIPTION)), 
+            accIds);
+
         Test.stopTest();
 
         // Assert 
@@ -27,7 +33,8 @@ private class SampleJobAsync_Test {
         System.assertEquals(200, updatedAccounts.size(), 'Expected 200 accounts in the system');
         
         for(Account acc : updatedAccounts){
-            System.assert(acc.Description.startsWith('Updated: '), 'Expected all accounts descriptions to be updated with "Updated: xxx" string');
+            System.assertEquals(NEW_DESCRIPTION, acc.Description, 
+                'Expected all accounts descriptions to be updated with a string provided in Options');
         }
     }
 }

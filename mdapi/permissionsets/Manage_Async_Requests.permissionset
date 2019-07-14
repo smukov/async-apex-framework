@@ -8,6 +8,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Async_Request__c.Options__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Async_Request__c.Params__c</field>
         <readable>true</readable>
     </fieldPermissions>
