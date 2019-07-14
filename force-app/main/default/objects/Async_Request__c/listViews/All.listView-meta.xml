@@ -4,6 +4,7 @@
     <columns>NAME</columns>
     <columns>Type__c</columns>
     <columns>Error_Msg__c</columns>
+    <columns>Options__c</columns>
     <columns>Params__c</columns>
     <filterScope>Everything</filterScope>
     <label>All</label>

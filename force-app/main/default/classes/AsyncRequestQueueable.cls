@@ -34,7 +34,7 @@ public without sharing class AsyncRequestQueueable implements Queueable {
         List<Async_Request__c> requests = new List<Async_Request__c>();
         try{
             requests = [
-                SELECT Id, Type__c, Error_Msg__c, Params__c
+                SELECT Id, Type__c, Error_Msg__c, Params__c, Options__c
                 FROM Async_Request__c
                 WHERE Error_Msg__c = null 
                 LIMIT 1 FOR UPDATE
